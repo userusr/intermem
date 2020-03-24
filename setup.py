@@ -1,23 +1,25 @@
 #!/usr/bin/env python
-
 """The setup script."""
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
+requirements = [
+    'Click>=7.0',
+]
 
-requirements = ['Click>=7.0', ]
+setup_requirements = [
+    'pytest-runner',
+]
 
-setup_requirements = ['pytest-runner', ]
-
-test_requirements = ['pytest>=3', ]
+test_requirements = [
+    'pytest>=3',
+]
 
 setup(
-    author="userusr",
+    author='userusr',
     author_email='userusr@yandex.ru',
     python_requires='>=3.5',
     classifiers=[
@@ -31,15 +33,15 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="The interview task",
+    description='The interview task',
     entry_points={
         'console_scripts': [
             'intermem=intermem.cli:main',
         ],
     },
     install_requires=requirements,
-    license="MIT license",
-    long_description=readme + '\n\n' + history,
+    license='MIT license',
+    long_description=readme,
     include_package_data=True,
     keywords='intermem',
     name='intermem',
