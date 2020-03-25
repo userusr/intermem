@@ -11,9 +11,10 @@ pytest-runner
 isort
 yapf
 
+pylint
+
 flake8
 flake8-mock
-flake8-mypy
 flake8-string-format
 flake8-isort
 flake8-commas
