@@ -1,5 +1,6 @@
 """Dummy memcached client library."""
 import socket
+from typing import Optional
 
 
 class Client():
@@ -14,10 +15,10 @@ class Client():
         """
         self.host = host
         self.port = port
-        self.sock = None
-        self._connect()
+        self.sock = None  # type: Optional[socket.socket]
 
-    def _connect(self):
+    def connect(self) -> None:
+        """Socket connect."""
         self.close()
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -29,7 +30,7 @@ class Client():
 
         self.sock = sock
 
-    def close(self):
+    def close(self) -> None:
         """Close socket."""
         if self.sock is not None:
             self.sock.close()
