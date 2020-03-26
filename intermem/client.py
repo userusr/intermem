@@ -77,6 +77,27 @@ class Client():
 
         return result
 
+    def cmd_get(self, key: bytes) -> Optional[bytes]:
+        """Get data command.
+
+        :param key: key
+        :type key: bytes
+        :return: None if key does not exists, or value
+        :rtype: Optional[bytes]
+        """
+        cmd = self._cmd_recv(b'get', key)
+
+        if self.sock is None:
+            self.connect()
+
+        self.sock.sendall(cmd)
+
+        lines = self._readlines()
+        if lines[0].startswith(b'END'):
+            return None
+        elif lines[0].startswith(b'VALUE'):
+            return lines[1]
+
     def _readlines(self, length: int = RECV_SIZE) -> List[bytes]:
         lines = []
         sep = b'\r\n'
@@ -99,3 +120,9 @@ class Client():
             expire,
             bytes(str(len(value)), 'ascii'),
         ]) + b'\r\n' + value + b'\r\n'
+
+    def _cmd_recv(self, name: bytes, key: bytes) -> bytes:
+        return b' '.join([
+            name,
+            key,
+        ]) + b'\r\n'
