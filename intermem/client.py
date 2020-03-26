@@ -98,6 +98,27 @@ class Client():
         elif lines[0].startswith(b'VALUE'):
             return lines[1]
 
+    def cmd_delete(self, key: bytes) -> bool:
+        """Command "delete".
+
+        :param key: key
+        :type key: bytes
+        :return: True if key deleted, False if key was not found
+        :rtype: bool
+        """
+        cmd = self._cmd_maint(b'delete', key)
+
+        if self.sock is None:
+            self.connect()
+
+        self.sock.sendall(cmd)
+
+        line = self._readlines()[0]
+        if line.startswith(b'DELETED'):
+            return True
+        else:
+            return False
+
     def _readlines(self, length: int = RECV_SIZE) -> List[bytes]:
         lines = []
         sep = b'\r\n'
@@ -122,6 +143,12 @@ class Client():
         ]) + b'\r\n' + value + b'\r\n'
 
     def _cmd_recv(self, name: bytes, key: bytes) -> bytes:
+        return b' '.join([
+            name,
+            key,
+        ]) + b'\r\n'
+
+    def _cmd_maint(self, name: bytes, key: bytes) -> bytes:
         return b' '.join([
             name,
             key,

@@ -51,9 +51,17 @@ class TestIntermem(unittest.TestCase):
         client.connect()
         self.assertEqual(client.sock.getpeername()[0], host)
         self.assertEqual(client.sock.getpeername()[1], 11211)
-        self.assertEqual(client.cmd_set(b'key', b'value'), True)
+
+        self.assertTrue(client.cmd_set(b'key', b'value'))
+        self.assertTrue(client.cmd_set(b'key1', b'value1'))
+
         self.assertEqual(client.cmd_get(b'key'), b'value')
-        self.assertEqual(client.cmd_get(b'key1'), None)
+        self.assertEqual(client.cmd_get(b'key1'), b'value1')
+
+        self.assertIsNone(client.cmd_get(b'key_unknown'))
+        self.assertTrue(client.cmd_delete(b'key'))
+        self.assertFalse(client.cmd_delete(b'key_unknown'))
+
         client.close()
 
     def test_cmd_store(self) -> None:
@@ -66,6 +74,12 @@ class TestIntermem(unittest.TestCase):
         """Test generation of recive command."""
         client = Client()
         cmd = client._cmd_recv(b'name', b'key')
+        self.assertEqual(cmd, b'name key\r\n')
+
+    def test_cmd_delete(self) -> None:
+        """Test generation of delete command."""
+        client = Client()
+        cmd = client._cmd_maint(b'name', b'key')
         self.assertEqual(cmd, b'name key\r\n')
 
     def test_readlines_from_socket(self) -> None:
