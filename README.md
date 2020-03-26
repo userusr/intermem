@@ -1,5 +1,7 @@
 # The interview memcached client library
 
+[![Build Status](https://travis-ci.org/userusr/intermem.svg?branch=master)](https://travis-ci.org/userusr/intermem)
+
 This is dummy implementation of memcached protocol. Not fully upported only `set`, `get`
 and `delete` commands.
 
