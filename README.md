@@ -1,4 +1,4 @@
-# The interview memcached client library
+# Dummy memcached client library
 
 [![Build Status](https://travis-ci.org/userusr/intermem.svg?branch=master)](https://travis-ci.org/userusr/intermem)
 
