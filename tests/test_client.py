@@ -3,7 +3,7 @@
 import functools
 import os
 import unittest
-from typing import Tuple  # noqa
+from typing import List, Tuple, Optional  # noqa
 from unittest import mock
 
 from intermem.client import Client
@@ -11,13 +11,20 @@ from intermem.client import Client
 
 class MockSocket():
     """Mock socket class."""
-    def __init__(self, client: Client) -> None:
+    def __init__(self,
+                 client: Client,
+                 recv_buf: Optional[bytes] = None) -> None:
         """Constructor.
 
         :param client: Client class
         :type client: Client
         """
         self.client = client
+        self.recv_buf = recv_buf
+
+    def recv(self, length: int) -> bytes:
+        """Mosc recv method of socket."""
+        return self.recv_buf
 
     def close(self) -> None:
         """Mock."""
@@ -44,7 +51,25 @@ class TestIntermem(unittest.TestCase):
         client.connect()
         self.assertEqual(client.sock.getpeername()[0], host)
         self.assertEqual(client.sock.getpeername()[1], 11211)
+        self.assertEqual(client.cmd_set(b'key', b'value'), True)
         client.close()
+
+    def test_cmd_store(self) -> None:
+        """Test generation of store command."""
+        client = Client()
+        cmd = client._cmd_store(b'name', b'key', b'value', b'10', b'8')
+        self.assertEqual(cmd, b'name key 10 8 5\r\nvalue\r\n')
+
+    def test_readlines_from_socket(self) -> None:
+        """Test readline from socket."""
+        client = Client()
+        sock = MockSocket(client, b'STORED\r\n')
+        client.connect = mock.Mock(
+            side_effect=functools.partial(setattr, client, 'sock', sock))
+        client.connect()
+
+        lines = client._readlines()
+        self.assertListEqual(lines, [b'STORED'])
 
     def test_mock_socket(self) -> None:
         """Connect to mock socket."""
