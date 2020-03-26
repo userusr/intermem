@@ -1,6 +1,6 @@
 # The interview memcached client library
 
-This is dummy implementation of memcached protocol. Supported only `set`, `get`
+This is dummy implementation of memcached protocol. Not fully upported only `set`, `get`
 and `delete` commands.
 
 Memcached protocol is
