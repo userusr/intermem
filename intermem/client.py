@@ -66,6 +66,8 @@ class Client():
         result = False
         cmd = self._cmd_store(b'set', key, value, data_flags, expire)
 
+        self._check_flags(data_flags)
+
         if self.sock is None:
             self.connect()
 
@@ -118,6 +120,12 @@ class Client():
             return True
         else:
             return False
+
+    def _check_flags(self, flags: bytes) -> None:
+        int_flags = int(flags)
+        if int_flags > 2**16 or int_flags < 0:
+            raise ValueError(
+                f'Flags mast be 16-bit unsigned integer, got: {flags}')
 
     def _readlines(self, length: int = RECV_SIZE) -> List[bytes]:
         lines = []

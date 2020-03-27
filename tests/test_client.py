@@ -3,8 +3,10 @@
 import functools
 import os
 import unittest
-from typing import List, Tuple, Optional  # noqa
+from typing import List, Optional, Tuple  # noqa
 from unittest import mock
+
+import pytest
 
 from intermem.client import Client
 
@@ -91,6 +93,12 @@ class TestIntermem(unittest.TestCase):
         client = self._get_mock_client(b'STORED\r\n')
         lines = client._readlines()
         self.assertListEqual(lines, [b'STORED'])
+
+    def test_check_flags(self) -> None:
+        """Test chech flags function."""
+        client = Client()
+        with pytest.raises(ValueError):
+            client._check_flags(bytes(str(2**17), 'ascii'))
 
     def test_cmd_set(self) -> None:
         """Test set command."""
