@@ -14,7 +14,7 @@ certifi==2019.11.28       # via requests
 cffi==1.14.0              # via cryptography
 chardet==3.0.4            # via requests
 coverage==5.0.4           # via -r requirements_dev.in
-cryptography==2.8         # via secretstorage
+cryptography==3.2         # via secretstorage
 distlib==0.3.0            # via virtualenv
 docutils==0.16            # via readme-renderer, restructuredtext-lint
 entrypoints==0.3          # via flake8
